@@ -1,0 +1,17 @@
+{
+  "name": "cordova-plugin-usbserial",
+  "version": "0.0.1",
+  "description": "Cordova plugin to communicate with the android usb serial port",
+  "cordova": {
+    "id": "cordova-plugin-usbserial",
+    "platforms": [
+      "android"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "author": "Dario Cavada",
+  "license": "MIT"
+}
