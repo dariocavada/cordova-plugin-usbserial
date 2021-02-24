@@ -1,8 +1,7 @@
 ## cordova-plugin-usbserial
 
+### This plugin is no longer updated and is no longer maintained
 
-
-Just starting... whatch the project if you would like to be notified when a first version will be available. 
 
 
 
