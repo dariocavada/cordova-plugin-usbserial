@@ -42,7 +42,7 @@ import android.util.Log;
  */
 public class UsbSerial extends CordovaPlugin {
 	// logging tag
-	private final String TAG = Serial.class.getSimpleName();
+	private final String TAG = UsbSerial.class.getSimpleName();
 	// actions definitions
 	private static final String ACTION_REQUEST_PERMISSION = "requestPermission";
 	private static final String ACTION_OPEN = "openSerial";
@@ -85,7 +85,7 @@ public class UsbSerial extends CordovaPlugin {
 				}
 				@Override
 				public void onNewData(final byte[] data) {
-					Serial.this.updateReceivedData(data);
+					UsbSerial.this.updateReceivedData(data);
 				}
 			};
 
@@ -225,39 +225,40 @@ public class UsbSerial extends CordovaPlugin {
 	private void openSerial(final JSONObject opts, final CallbackContext callbackContext) {
 		cordova.getThreadPool().execute(new Runnable() {
 			public void run() {
-				UsbDeviceConnection connection = manager.openDevice(driver.getDevice());
-				if (connection != null) {
-					// get first port and open it
-					port = driver.getPorts().get(0);
-					try {
-						// get connection params or the default values
-						baudRate = opts.has("baudRate") ? opts.getInt("baudRate") : 9600;
-						dataBits = opts.has("dataBits") ? opts.getInt("dataBits") : UsbSerialPort.DATABITS_8;
-						stopBits = opts.has("stopBits") ? opts.getInt("stopBits") : UsbSerialPort.STOPBITS_1;
-						parity = opts.has("parity") ? opts.getInt("parity") : UsbSerialPort.PARITY_NONE;
-						setDTR = opts.has("dtr") && opts.getBoolean("dtr");
-						setRTS = opts.has("rts") && opts.getBoolean("rts");
-						// Sleep On Pause defaults to true
-						sleepOnPause = opts.has("sleepOnPause") ? opts.getBoolean("sleepOnPause") : true;
+				UsbDevice device = driver.getDevice();
+				if (device != null) {
+					UsbDeviceConnection connection = manager.openDevice(device);
+					if (connection != null) {
+						// get first port and open it
+						port = driver.getPorts().get(0);
+						try {
+							// get connection params or the default values
+							baudRate = opts.has("baudRate") ? opts.getInt("baudRate") : 9600;
+							dataBits = opts.has("dataBits") ? opts.getInt("dataBits") : UsbSerialPort.DATABITS_8;
+							stopBits = opts.has("stopBits") ? opts.getInt("stopBits") : UsbSerialPort.STOPBITS_1;
+							parity = opts.has("parity") ? opts.getInt("parity") : UsbSerialPort.PARITY_NONE;
+							setDTR = opts.has("dtr") && opts.getBoolean("dtr");
+							setRTS = opts.has("rts") && opts.getBoolean("rts");
+							// Sleep On Pause defaults to true
+							sleepOnPause = opts.has("sleepOnPause") ? opts.getBoolean("sleepOnPause") : true;
 
-						port.open(connection);
-						port.setParameters(baudRate, dataBits, stopBits, parity);
-						if (setDTR) port.setDTR(true);
-						if (setRTS) port.setRTS(true);
-					}
-					catch (IOException  e) {
-						// deal with error
-						Log.d(TAG, e.getMessage());
-						callbackContext.error(e.getMessage());
-					}
-					catch (JSONException e) {
-						// deal with error
-						Log.d(TAG, e.getMessage());
-						callbackContext.error(e.getMessage());
-					}
+							port.open(connection);
+							port.setParameters(baudRate, dataBits, stopBits, parity);
+							if (setDTR) port.setDTR(true);
+							if (setRTS) port.setRTS(true);
+						} catch (IOException e) {
+							// deal with error
+							Log.d(TAG, e.getMessage());
+							callbackContext.error(e.getMessage());
+						} catch (JSONException e) {
+							// deal with error
+							Log.d(TAG, e.getMessage());
+							callbackContext.error(e.getMessage());
+						}
 
-					Log.d(TAG, "Serial port opened!");
-					callbackContext.success("Serial port opened!");
+						Log.d(TAG, "Serial port opened!");
+						callbackContext.success("Serial port opened!");
+					}
 				}
 				else {
 					Log.d(TAG, "Cannot connect to the device!");

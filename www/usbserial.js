@@ -55,7 +55,7 @@ var usbserial = {
         cordova.exec(
             successCallback,
             errorCallback,
-            'Serial',
+            'UsbSerial',
             'closeSerial',
             []
         );

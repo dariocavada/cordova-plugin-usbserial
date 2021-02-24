@@ -8,8 +8,8 @@
     </js-module>
     <platform name="android">
         <config-file parent="/*" target="res/xml/config.xml">
-            <feature name="usbserial">
-                <param name="android-package" value="com.dchs.usbserial" />
+            <feature name="UsbSerial">
+                <param name="android-package" value="com.dchs.usbserial.UsbSerial" />
             </feature>
         </config-file>
         <config-file parent="/*" target="AndroidManifest.xml"></config-file>
